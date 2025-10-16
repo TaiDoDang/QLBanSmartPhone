@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/build/classes/lib/LGoodDatePicker-10.4.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/build/classes/lib/itextpdf-5.5.12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Downloads/sqlite-jdbc-3.49.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

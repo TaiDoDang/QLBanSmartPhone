@@ -1,0 +1,97 @@
+package giaodienchuan.model.BackEnd.QuanLyLoaiSanPham;
+
+import giaodienchuan.model.BackEnd.ConnectionDB.ConnectionDB;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+
+public class QuanLyLoaiSanPhamDAO {
+
+    ConnectionDB qllspConnection;
+
+    public QuanLyLoaiSanPhamDAO() {
+
+    }
+
+    public ArrayList<LoaiSanPham> readDB() {
+        qllspConnection = new ConnectionDB();
+        ArrayList<LoaiSanPham> dslsp = new ArrayList<>();
+        try {
+            String qry = "SELECT * FROM loaisanpham";
+            ResultSet r = qllspConnection.sqlQuery(qry);
+            if (r != null) {
+                while (r.next()) {
+                    String malsp = r.getString("MaLSP");
+                    String tenlsp = r.getString("TenLSP");
+                    String mota = r.getString("MoTa");
+
+                    dslsp.add(new LoaiSanPham(malsp, tenlsp, mota));
+                }
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "-- ERROR! Lỗi đọc dữ liệu bảng loại sản phẩm");
+        } finally {
+            qllspConnection.closeConnect();
+        }
+        return dslsp;
+    }
+
+    public ArrayList<LoaiSanPham> search(String columnName, String value) {
+        qllspConnection = new ConnectionDB();
+        ArrayList<LoaiSanPham> dslsp = new ArrayList<>();
+
+        try {
+            String qry = "SELECT * FROM loaisanpham WHERE " + columnName + " LIKE '%" + value + "%'";
+            ResultSet r = qllspConnection.sqlQuery(qry);
+            if (r != null) {
+                while (r.next()) {
+                    String malsp = r.getString("MaLSP");
+                    String tenlsp = r.getString("TenLSP");
+                    String mota = r.getString("MoTa");
+
+                    dslsp.add(new LoaiSanPham(malsp, tenlsp, mota));
+                }
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "-- ERROR! Lỗi tìm dữ liệu " + columnName + " = " + value + " bảng loại sản phẩm");
+        } finally {
+            qllspConnection.closeConnect();
+        }
+
+        return dslsp;
+    }
+
+    public Boolean add(LoaiSanPham lsp) {
+        qllspConnection = new ConnectionDB();
+        Boolean ok = qllspConnection.sqlUpdate("INSERT INTO loaisanpham (MaLSP, TenLSP, MoTa) VALUES ('"
+                + lsp.getMaLSP() + "', '"
+                + lsp.getTenLSP() + "', '"
+                + lsp.getMoTa() + "');");
+        qllspConnection.closeConnect();
+        return ok;
+    }
+
+    public Boolean delete(String malsp) {
+        qllspConnection = new ConnectionDB();
+        Boolean ok = qllspConnection.sqlUpdate("DELETE FROM loaisanpham WHERE MaLSP = '" + malsp + "'");
+        qllspConnection.closeConnect();
+        return ok;
+    }
+
+    public Boolean update(String MaLSP, String TenLSP, String MoTa) {
+        qllspConnection = new ConnectionDB();
+        Boolean ok = qllspConnection.sqlUpdate("UPDATE loaisanpham SET "
+                + "TenLSP = '" + TenLSP
+                + "', MoTa = '" + MoTa
+                + "' WHERE MaLSP = '" + MaLSP + "'");
+        qllspConnection.closeConnect();
+        return ok;
+    }
+
+    public void close() {
+        qllspConnection.closeConnect();
+    }
+}
